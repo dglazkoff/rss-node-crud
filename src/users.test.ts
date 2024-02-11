@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { server }  from './index';
+import { createServer }  from './server';
 import {User} from "./types";
 
 const testUser: Omit<User, 'id'> = {
@@ -7,6 +7,8 @@ const testUser: Omit<User, 'id'> = {
     age: 20,
     hobbies: ['football', 'hiking']
 }
+
+const server = createServer();
 
 describe('/api/users Testing', () => {
     afterAll((done) => {
@@ -25,7 +27,7 @@ describe('/api/users Testing', () => {
         it('should get empty users', async () => {
             const response = await request(server).get('/api/users');
             expect(response.status).toBe(200);
-            expect(response.body).toEqual({});
+            expect(response.body).toEqual([]);
         })
 
         it('should create user', async () => {

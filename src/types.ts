@@ -9,4 +9,14 @@ export type User = {
   hobbies: string[]
 };
 
-export type Controller = Partial<Record<CrudMethods, (args: string | undefined, req: http.IncomingMessage) => Promise<{ data?: unknown, code?: number }>>>;
+export interface Controller {
+  crudInterface: Partial<Record<CrudMethods, (args: string | undefined, req: http.IncomingMessage) => Promise<{ data?: unknown, code?: number }>>>;
+}
+
+export interface IUsersDB {
+  getAll: () => Promise<User[]>;
+  get: (id: string) => Promise<User | undefined>;
+  set: (id: string, data: User) => Promise<void>;
+  has: (id: string) => Promise<boolean>;
+  delete: (id: string) => Promise<void>;
+}
