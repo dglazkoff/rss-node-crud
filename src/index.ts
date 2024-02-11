@@ -10,7 +10,7 @@ const mapURLToController: Record<string, Controller> = {
     'users': users,
 };
 
-const server = http.createServer(async (req, res) => {
+export const server = http.createServer(async (req, res) => {
     try {
         const url = new URL(req.url ?? '', `http://${req.headers.host}`);
         const [apiPath, controllerPath, argsPath]: string[] = url.pathname.split('/').filter(Boolean);

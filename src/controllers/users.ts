@@ -26,7 +26,7 @@ const getUsers = async (id?: string) => {
     return { data: users };
 }
 
-function getParsedUser(user: any) {
+function getParsedUser(user: any, id: string): User {
     const { username, age, hobbies } = user;
 
     if (!username || !age || !hobbies) {
@@ -34,7 +34,7 @@ function getParsedUser(user: any) {
     }
 
     const parsedUser: User = {
-        id: uuid(),
+        id: id,
         username: String(username),
         age: Number(age),
         hobbies,
@@ -47,7 +47,7 @@ function getParsedUser(user: any) {
     return parsedUser;
 }
 
-const addUserFromBody = (req: http.IncomingMessage, id?: string) => new Promise((resolve, reject) => {
+const addUserFromBody = (req: http.IncomingMessage, id: string) => new Promise((resolve, reject) => {
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -55,8 +55,8 @@ const addUserFromBody = (req: http.IncomingMessage, id?: string) => new Promise(
 
     req.on('end', () => {
         try {
-            const user = getParsedUser(JSON.parse(body));
-            users[id ?? user.id] = user;
+            const user = getParsedUser(JSON.parse(body), id);
+            users[id] = user;
 
             resolve(user);
         } catch (e) {
@@ -66,7 +66,7 @@ const addUserFromBody = (req: http.IncomingMessage, id?: string) => new Promise(
 })
 
 const createUser = async (_args: string | undefined, req: http.IncomingMessage) =>  {
-    const user = await addUserFromBody(req);
+    const user = await addUserFromBody(req, uuid());
     return { data: user, code: 201 };
 }
 
