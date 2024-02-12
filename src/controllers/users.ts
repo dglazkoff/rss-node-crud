@@ -47,7 +47,12 @@ export default class UsersController implements Controller {
             hobbies,
         };
 
-        if (!parsedUser.username || !parsedUser.age || parsedUser.age < 0 || !Array.isArray(parsedUser.hobbies)) {
+        if (!parsedUser.username
+            || !parsedUser.age
+            || parsedUser.age < 0
+            || !Array.isArray(parsedUser.hobbies)
+            || parsedUser.hobbies.some((hobby: unknown) => typeof hobby !== 'string')
+        ){
             throw new ServerError('Wrong format of fields', 400);
         }
 
